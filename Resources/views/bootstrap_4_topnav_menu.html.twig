@@ -1,0 +1,65 @@
+{# @var menu \Unlooped\MenuBundle\Model\Menu #}
+{# @var childMenu \Unlooped\MenuBundle\Model\Menu #}
+
+
+{% set attr = options.attr|merge({class: (options.attr.class|default('nav'))|trim}) %}
+
+{% import _self as self %}
+
+{% macro attributes(attr) %}
+    {% for attr, value in attr %}
+        {{ attr }}="{{ value }}"
+    {% endfor %}
+{% endmacro %}
+
+{% block menu %}
+    <ul {{ self.attributes(attr) }}>
+        {% for childMenu in menu.children %}
+            {% if childMenu.children %}
+                {% block nav_item_dropdown %}
+                    <li class="nav-item dropdown">
+                        {% block nav_link_dropdown %}
+                            <a class="nav-link dropdown-toggle{% if childMenu.childActive %} active{% endif %}"
+                               data-toggle="dropdown"
+                               role="button"
+                               aria-haspopup="true"
+                               aria-expanded="false"
+                            >
+                                {% if childMenu.otherOptions.icon is defined %}
+                                    <span class="{{ childMenu.otherOptions.icon }}"></span>
+                                {% endif %}
+                                {{ childMenu.label }}
+                            </a>
+                        {% endblock %}
+                        {% block dropdown_menu %}
+                            <div class="dropdown-menu">
+                                {% for subMenu in childMenu.children %}
+                                    {% block dropdown_item %}
+                                        <a class="dropdown-item{% if subMenu.active %} active{% endif %}" {{ menu_href(subMenu) }}>
+                                            {% if subMenu.otherOptions.icon is defined %}
+                                                <span class="{{ subMenu.otherOptions.icon }}"></span>
+                                            {% endif %}
+                                            {{ subMenu.label }}
+                                            {% if subMenu.active %}<span class="sr-only">(current)</span>{% endif %}
+                                        </a>
+                                    {% endblock %}
+                                {% endfor %}
+                            </div>
+                        {% endblock %}
+                    </li>
+                {% endblock %}
+            {% else %}
+                {% block nav_item %}
+                    <li class="nav-item">
+                        {% block nav_link %}
+                            <a class="nav-link{% if childMenu.active %} active{% endif %}" {{ menu_href(childMenu) }}>
+                                {{ childMenu.label }}
+                                {% if childMenu.active %}<span class="sr-only">(current)</span>{% endif %}
+                            </a>
+                        {% endblock %}
+                    </li>
+                {% endblock %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

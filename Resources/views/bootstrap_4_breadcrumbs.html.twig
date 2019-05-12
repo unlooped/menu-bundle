@@ -1,0 +1,9 @@
+{# @var menu \Unlooped\MenuBundle\Model\Menu #}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        {% for menu in breadcrumbs %}
+            <li class="breadcrumb-item{% if menu.active %} active{% endif %}"{% if menu.active %} aria-current="page"{% endif %}>{% if not menu.active and menu_link(menu) %}<a href="{{ menu_link(menu) }}">{{ menu.label }}</a>{% else %}{{ menu.label }}{% endif %}</li>
+        {% endfor %}
+    </ol>
+</nav>

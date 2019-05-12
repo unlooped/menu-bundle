@@ -1,0 +1,17 @@
+{# @var menu \Unlooped\MenuBundle\Model\Menu #}
+
+{% set attr = options.attr|merge({class: (options.attr.class|default('nav'))|trim}) %}
+
+{% import _self as self %}
+
+{% macro attributes(attr) %}
+    {% for attr, value in attr %}
+        {{ attr }}="{{ value }}"
+    {% endfor %}
+{% endmacro %}
+
+<nav {{ self.attributes(attr) }}>
+    {% for child in menu.children %}
+        <a class="nav-link{% if child.active %} active{% endif %}" {{ menu_href(child) }}>{{ child.label }}</a>
+    {% endfor %}
+</nav>

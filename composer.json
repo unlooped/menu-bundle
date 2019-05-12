@@ -1,0 +1,29 @@
+{
+    "name": "unlooped/menu-bundle",
+    "description": "Simple Menu Builder",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Steffen Persch",
+            "email": "s.persch@unlooped.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "symfony/options-resolver": "^4.2",
+        "twig/twig": "^2.9",
+        "symfony/http-kernel": "^4.2",
+        "symfony/dependency-injection": "^4.2",
+        "symfony/twig-bridge": "^4.2",
+        "symfony/config": "^4.2",
+        "symfony/http-foundation": "^4.2",
+        "symfony/routing": "^4.2",
+        "doctrine/annotations": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Unlooped\\MenuBundle\\": "src/"
+        }
+    }
+}

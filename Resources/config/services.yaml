@@ -1,0 +1,12 @@
+services:
+    _instanceof:
+        Unlooped\MenuBundle\Service\AbstractMenuBuilderService:
+            tags: ['unlooped.menu_bundle.builder']
+        Twig\Extension\AbstractExtension:
+            tags: ['twig.extension']
+    Unlooped\MenuBundle\Service\MenuService:
+        arguments: [!tagged unlooped.menu_bundle.builder, '@router.default', '@security.token_storage']
+        public: false
+    Unlooped\MenuBundle\Twig\MenuExtension:
+        public: false
+        arguments: ['@Unlooped\MenuBundle\Service\MenuService']

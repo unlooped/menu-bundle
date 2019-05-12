@@ -1,0 +1,42 @@
+{# @var menu \Unlooped\MenuBundle\Model\Menu #}
+{# @var childMenu \Unlooped\MenuBundle\Model\Menu #}
+
+
+{% set attr = options.attr|merge({class: (options.attr.class|default('nav'))|trim}) %}
+
+{% import _self as self %}
+
+{% macro attributes(attr) %}
+    {% for attr, value in attr %}
+        {{ attr }}="{{ value }}"
+    {% endfor %}
+{% endmacro %}
+
+{% block menu %}
+    <nav {{ self.attributes(attr) }}>
+        {% for childMenu in menu.children %}
+            <div class="bd-toc-item{% if childMenu.childActive or childMenu.active %} active{% endif %}">
+                <a class="bd-toc-link" {{ menu_href(childMenu) }}>
+                    {% if childMenu.otherOptions.icon is defined %}
+                        <span class="{{ childMenu.otherOptions.icon }}"></span>
+                    {% endif %}
+                    {{ childMenu.label }}
+                </a>
+
+                <ul class="nav bd-sidenav">
+                    {% for subMenu in childMenu.children if subMenu.visible %}
+                        <li{% if subMenu.active or subMenu.childActive %} class="active bd-sidenav-active"{% endif %}>
+                            <a {{ menu_href(subMenu) }}>
+                                {% if subMenu.otherOptions.icon is defined %}
+                                    <span class="{{ subMenu.otherOptions.icon }}"></span>
+                                {% endif %}
+                                {{ subMenu.label }}
+                                {% if subMenu.active %}<span class="sr-only">(current)</span>{% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </nav>
+{% endblock %}
