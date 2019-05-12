@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Unlooped\\MenuBundle\\": "src/"
+            "Unlooped\\MenuBundle\\": ""
         }
     }
 }
