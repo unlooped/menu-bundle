@@ -122,6 +122,11 @@ class Menu
         return $this->options['other'];
     }
 
+    public function getAttr()
+    {
+        return $this->options['attr'];
+    }
+
     public function markAsActive(): void
     {
         $this->isActive = true;
