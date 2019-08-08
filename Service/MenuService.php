@@ -103,7 +103,7 @@ class MenuService
                 return true;
             }
 
-            if (count(array_diff($this->user->getRoles(), $showInMenu->forRoles)) < $frc) {
+            if (count(array_diff($showInMenu->forRoles, $this->user->getRoles())) < $frc) {
                 return true;
             }
 
