@@ -20,9 +20,8 @@ class MenuService
 
     private $menuBuilderServices;
     private $router;
-    /** @var UserInterface */
-    private $user;
     private $routeCollection;
+    private $tokenStorage;
 
     /**
      * @param iterable|AbstractMenuBuilderService[] $handlers
@@ -37,12 +36,7 @@ class MenuService
         $this->router = $router;
         $this->routeCollection = $this->router->getRouteCollection();
 
-        if ($tokenStorage
-            && $tokenStorage->getToken()
-            && $tokenStorage->getToken()->getUser())
-        {
-            $this->user = $tokenStorage->getToken()->getUser();
-        }
+        $this->tokenStorage = $tokenStorage;
 
         foreach ($this->menuBuilderServices as $menuBuilderService) {
             $menuBuilderService->setMenuService($this);
@@ -71,7 +65,10 @@ class MenuService
      */
     public function canCurrentUserAccessRoute(string $routeName): bool
     {
-        if (!$this->router || !$this->user) {
+        if (!$this->router
+            || !$this->tokenStorage->getToken()
+            || !$user = $this->tokenStorage->getToken()->getUser()
+        ) {
             return false;
         }
 
@@ -103,7 +100,7 @@ class MenuService
                 return true;
             }
 
-            if (count(array_diff($showInMenu->forRoles, $this->user->getRoles())) < $frc) {
+            if (count(array_diff($showInMenu->forRoles, $user->getRoles())) < $frc) {
                 return true;
             }
 
@@ -116,7 +113,7 @@ class MenuService
                 return false;
             }
 
-            if (count(array_diff($this->user->getRoles(), $hideInMenu->forRoles)) < $frc) {
+            if (count(array_diff($user->getRoles(), $hideInMenu->forRoles)) < $frc) {
                 return false;
             }
 
