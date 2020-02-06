@@ -14,7 +14,7 @@
 
 {% block menu %}
     <nav {{ self.attributes(attr) }}>
-        {% for childMenu in menu.children %}
+        {% for childMenu in menu.visibleChildren if childMenu.visibleChildren|length > 0 or menu_link(childMenu) %}
             <div class="bd-toc-item{% if childMenu.childActive or childMenu.active %} active{% endif %}">
                 <a class="bd-toc-link" {{ menu_href(childMenu) }}>
                     {% if childMenu.otherOptions.icon is defined %}
@@ -24,7 +24,7 @@
                 </a>
 
                 <ul class="nav bd-sidenav">
-                    {% for subMenu in childMenu.children if subMenu.visible %}
+                    {% for subMenu in childMenu.visibleChildren %}
                         <li{% if subMenu.active or subMenu.childActive %} class="active bd-sidenav-active"{% endif %}>
                             <a {{ menu_href(subMenu) }}>
                                 {% if subMenu.otherOptions.icon is defined %}

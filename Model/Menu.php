@@ -162,6 +162,16 @@ class Menu
         return $this->children;
     }
 
+    /**
+     * @return array|Menu[]
+     */
+    public function visibleChildren(): array
+    {
+        return array_filter($this->children, function(Menu $menu) {
+            return $menu->isVisible();
+        });
+    }
+
     public function getActiveChild(): ?Menu
     {
         return $this->activeChild;
