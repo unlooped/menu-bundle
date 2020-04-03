@@ -20,7 +20,6 @@ class MenuService
 
     private $menuBuilderServices;
     private $router;
-    private $routeCollection;
     private $tokenStorage;
 
     /**
@@ -34,7 +33,6 @@ class MenuService
     {
         $this->menuBuilderServices = $handlers;
         $this->router = $router;
-        $this->routeCollection = $this->router->getRouteCollection();
 
         $this->tokenStorage = $tokenStorage;
 
@@ -72,7 +70,8 @@ class MenuService
             return false;
         }
 
-        $route = $this->routeCollection->get($routeName);
+        $routeCollection = $this->router->getRouteCollection();
+        $route = $routeCollection->get($routeName);
         if (!$route) {
             throw new RouteNotFoundException($routeName . ' not Found');
         }
