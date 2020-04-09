@@ -13,6 +13,7 @@ use Unlooped\MenuBundle\Service\MenuService;
 class MenuHelper
 {
 
+    /** @var Menu */
     private $rootMenu;
     private $currentMenu;
     private $request;

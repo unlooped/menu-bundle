@@ -14,8 +14,8 @@
 
 {% block menu %}
     <ul {{ self.attributes(attr) }}>
-        {% for childMenu in menu.children %}
-            {% if childMenu.children %}
+        {% for childMenu in menu.visibleChildren %}
+            {% if childMenu.visibleChildren %}
                 {% block nav_item_dropdown %}
                     <li class="nav-item dropdown">
                         {% block nav_link_dropdown %}
@@ -33,7 +33,7 @@
                         {% endblock %}
                         {% block dropdown_menu %}
                             <div class="dropdown-menu">
-                                {% for subMenu in childMenu.children %}
+                                {% for subMenu in childMenu.visibleChildren %}
                                     {% block dropdown_item %}
                                         <a class="dropdown-item{% if subMenu.active %} active{% endif %}" {{ menu_href(subMenu) }}>
                                             {% if subMenu.otherOptions.icon is defined %}
