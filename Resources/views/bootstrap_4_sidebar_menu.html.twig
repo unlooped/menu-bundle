@@ -14,29 +14,31 @@
 
 {% block menu %}
     <nav {{ self.attributes(attr) }}>
-        {% for childMenu in menu.visibleChildren if childMenu.visibleChildren|length > 0 or menu_link(childMenu) %}
-            <div class="bd-toc-item{% if childMenu.childActive or childMenu.active %} active{% endif %}">
-                <a class="bd-toc-link" {{ menu_href(childMenu) }}>
-                    {% if childMenu.otherOptions.icon is defined %}
-                        <span class="{{ childMenu.otherOptions.icon }}"></span>
-                    {% endif %}
-                    {{ childMenu.label }}
-                </a>
+        {% for childMenu in menu.visibleChildren %}
+            {% if childMenu.visibleChildren|length > 0 or menu_link(childMenu) %}
+                <div class="bd-toc-item{% if childMenu.childActive or childMenu.active %} active{% endif %}">
+                    <a class="bd-toc-link" {{ menu_href(childMenu) }}>
+                        {% if childMenu.otherOptions.icon is defined %}
+                            <span class="{{ childMenu.otherOptions.icon }}"></span>
+                        {% endif %}
+                        {{ childMenu.label }}
+                    </a>
 
-                <ul class="nav bd-sidenav">
-                    {% for subMenu in childMenu.visibleChildren %}
-                        <li{% if subMenu.active or subMenu.childActive %} class="active bd-sidenav-active"{% endif %}>
-                            <a {{ menu_href(subMenu) }}>
-                                {% if subMenu.otherOptions.icon is defined %}
-                                    <span class="{{ subMenu.otherOptions.icon }}"></span>
-                                {% endif %}
-                                {{ subMenu.label }}
-                                {% if subMenu.active %}<span class="sr-only">(current)</span>{% endif %}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+                    <ul class="nav bd-sidenav">
+                        {% for subMenu in childMenu.visibleChildren %}
+                            <li{% if subMenu.active or subMenu.childActive %} class="active bd-sidenav-active"{% endif %}>
+                                <a {{ menu_href(subMenu) }}>
+                                    {% if subMenu.otherOptions.icon is defined %}
+                                        <span class="{{ subMenu.otherOptions.icon }}"></span>
+                                    {% endif %}
+                                    {{ subMenu.label }}
+                                    {% if subMenu.active %}<span class="sr-only">(current)</span>{% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         {% endfor %}
     </nav>
 {% endblock %}
