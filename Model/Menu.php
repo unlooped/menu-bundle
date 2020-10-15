@@ -39,14 +39,15 @@ class Menu
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'label'           => null,
-            'attr'            => [],
-            'route'           => '',
-            'routeOptions'    => [],
-            'routeAsAbsolute' => true,
-            'url'             => '',
-            'other'           => [],
-            'visible'         => true,
+            'label'             => null,
+            'attr'              => [],
+            'route'             => '',
+            'routeOptions'      => [],
+            'routeAsAbsolute'   => true,
+            'url'               => '',
+            'other'             => [],
+            'visible'           => true,
+            'visible_for_roles' => null,
         ]);
 
         $resolver->setAllowedTypes('label', ['null', 'string']);
@@ -57,6 +58,7 @@ class Menu
         $resolver->setAllowedTypes('url', 'string');
         $resolver->setAllowedTypes('other', 'array');
         $resolver->setAllowedTypes('visible', 'bool');
+        $resolver->setAllowedTypes('visible_for_roles', ['null', 'string', 'array']);
     }
     /**
      * @throws NameForMenuAlreadyExistsException
@@ -180,6 +182,14 @@ class Menu
     public function isVisible(): bool
     {
         return $this->options['visible'];
+    }
+
+    /**
+     * @return null|string|array
+     */
+    public function getVisibleForRoles()
+    {
+        return $this->options['visible_for_roles'];
     }
 
 }

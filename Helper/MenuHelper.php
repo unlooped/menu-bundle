@@ -2,11 +2,8 @@
 
 namespace Unlooped\MenuBundle\Helper;
 
-use Doctrine\Common\Annotations\AnnotationException;
-use ReflectionException;
 use Symfony\Component\HttpFoundation\Request;
 use Unlooped\MenuBundle\Exception\NameForMenuAlreadyExistsException;
-use Unlooped\MenuBundle\Exception\ShowAndHideAnnotationSetException;
 use Unlooped\MenuBundle\Model\Menu;
 use Unlooped\MenuBundle\Service\MenuService;
 
@@ -42,10 +39,7 @@ class MenuHelper
      * @param string $name
      * @param array $options
      *
-     * @throws AnnotationException
      * @throws NameForMenuAlreadyExistsException
-     * @throws ReflectionException
-     * @throws ShowAndHideAnnotationSetException
      */
     public function addMenu(string $name, array $options = []): self
     {
@@ -62,10 +56,7 @@ class MenuHelper
      * @param string $name
      * @param array $options
      *
-     * @throws AnnotationException
      * @throws NameForMenuAlreadyExistsException
-     * @throws ReflectionException
-     * @throws ShowAndHideAnnotationSetException
      */
     public function addSubMenu(string $name, array $options = []): self
     {
@@ -125,17 +116,10 @@ class MenuHelper
         return $res;
     }
 
-    /**
-     * @param array $options
-     *
-     * @throws AnnotationException
-     * @throws ReflectionException
-     * @throws ShowAndHideAnnotationSetException
-     */
     protected function updateVisible(array $options): array
     {
-        if ($this->menuService && isset($options['route']) && !isset($options['visible'])) {
-            $options['visible'] = $this->menuService->canCurrentUserAccessRoute($options['route']);
+        if ($this->menuService && isset($options['visible_for_roles']) && !isset($options['visible'])) {
+            $options['visible'] = $this->menuService->isAccessible($options['visible_for_roles']);
         }
 
         return $options;

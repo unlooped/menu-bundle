@@ -5,7 +5,7 @@ services:
         Twig\Extension\AbstractExtension:
             tags: ['twig.extension']
     Unlooped\MenuBundle\Service\MenuService:
-        arguments: [!tagged unlooped.menu_bundle.builder, '@router.default', '@security.token_storage']
+        arguments: [!tagged unlooped.menu_bundle.builder, '@security.authorization_checker']
         public: false
     Unlooped\MenuBundle\Twig\MenuExtension:
         public: false
