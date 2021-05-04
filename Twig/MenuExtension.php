@@ -26,11 +26,11 @@ class MenuExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('render_menu', [$this, 'getRenderedMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFunction('render_sub_menu', [$this, 'getRenderedSubMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFunction('menu_href', [$this, 'getHrefForMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFunction('menu_link', [$this, 'getLinkForMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new TwigFunction('render_breadcrumbs', [$this, 'getBreadcrumbsForMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('umb_render_menu', [$this, 'getRenderedMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('umb_render_sub_menu', [$this, 'getRenderedSubMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('umb_menu_href', [$this, 'getHrefForMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('umb_menu_link', [$this, 'getLinkForMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('umb_render_breadcrumbs', [$this, 'getBreadcrumbsForMenu'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
 
