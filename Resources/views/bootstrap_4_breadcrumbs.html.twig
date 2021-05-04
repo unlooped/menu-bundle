@@ -4,7 +4,7 @@
     <ol class="breadcrumb">
         {% for menu in breadcrumbs %}
             {% if menu.visible %}
-                <li class="breadcrumb-item{% if menu.active %} active{% endif %}"{% if menu.active %} aria-current="page"{% endif %}>{% if not menu.active and menu_link(menu) %}<a href="{{ menu_link(menu) }}">{{ menu.label }}</a>{% else %}{{ menu.label }}{% endif %}</li>
+                <li class="breadcrumb-item{% if menu.active %} active{% endif %}"{% if menu.active %} aria-current="page"{% endif %}>{% if not menu.active and umb_menu_link(menu) %}<a href="{{ menu_link(menu) }}">{{ menu.label }}</a>{% else %}{{ menu.label }}{% endif %}</li>
             {% endif %}
         {% endfor %}
     </ol>

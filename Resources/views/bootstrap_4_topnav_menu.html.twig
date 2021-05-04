@@ -35,7 +35,7 @@
                             <div class="dropdown-menu">
                                 {% for subMenu in childMenu.visibleChildren %}
                                     {% block dropdown_item %}
-                                        <a class="dropdown-item{% if subMenu.active %} active{% endif %}" {{ menu_href(subMenu) }}>
+                                        <a class="dropdown-item{% if subMenu.active %} active{% endif %}" {{ umb_menu_href(subMenu) }}>
                                             {% if subMenu.otherOptions.icon is defined %}
                                                 <span class="{{ subMenu.otherOptions.icon }}"></span>
                                             {% endif %}
@@ -52,7 +52,7 @@
                 {% block nav_item %}
                     <li class="nav-item">
                         {% block nav_link %}
-                            <a class="nav-link{% if childMenu.active %} active{% endif %}" {{ menu_href(childMenu) }}>
+                            <a class="nav-link{% if childMenu.active %} active{% endif %}" {{ umb_menu_href(childMenu) }}>
                                 {{ childMenu.label }}
                                 {% if childMenu.active %}<span class="sr-only">(current)</span>{% endif %}
                             </a>
