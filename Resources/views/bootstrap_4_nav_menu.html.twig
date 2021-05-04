@@ -12,6 +12,6 @@
 
 <nav {{ self.attributes(attr) }}>
     {% for child in menu.visibleChildren %}
-        <a class="nav-link{% if child.active %} active{% endif %}" {{ menu_href(child) }}>{{ child.label }}</a>
+        <a class="nav-link{% if child.active %} active{% endif %}" {{ umb_menu_href(child) }}>{{ child.label }}</a>
     {% endfor %}
 </nav>
