@@ -41,6 +41,16 @@ class MenuService
 
     public function isAccessible($attributes): bool
     {
+        if (is_iterable($attributes)) {
+            foreach ($attributes as $attribute) {
+                if ($this->authorizationChecker->isGranted($attribute)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         return $this->authorizationChecker->isGranted($attributes);
     }
 
