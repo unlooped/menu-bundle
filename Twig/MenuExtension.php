@@ -16,7 +16,7 @@ use Unlooped\MenuBundle\Service\MenuService;
 class MenuExtension extends AbstractExtension
 {
 
-    private $menuService;
+    private MenuService $menuService;
 
     public function __construct(MenuService $menuService)
     {

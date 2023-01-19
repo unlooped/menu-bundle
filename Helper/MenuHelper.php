@@ -3,6 +3,7 @@
 namespace Unlooped\MenuBundle\Helper;
 
 use Symfony\Component\HttpFoundation\Request;
+use Unlooped\MenuBundle\Exception\MenuNotManagedByHelperException;
 use Unlooped\MenuBundle\Exception\NameForMenuAlreadyExistsException;
 use Unlooped\MenuBundle\Model\Menu;
 use Unlooped\MenuBundle\Service\MenuService;
@@ -10,11 +11,12 @@ use Unlooped\MenuBundle\Service\MenuService;
 class MenuHelper
 {
 
-    /** @var Menu */
-    private $rootMenu;
-    private $currentMenu;
-    private $request;
-    private $menuService;
+    protected Menu $rootMenu;
+    protected Menu $currentMenu;
+    protected array $allMenus = [];
+
+    protected ?Request $request;
+    protected ?MenuService $menuService;
 
     public static function create(
         Request $request = null,
@@ -36,18 +38,27 @@ class MenuHelper
     }
 
     /**
-     * @param string $name
-     * @param array $options
-     *
+     * @throws NameForMenuAlreadyExistsException
+     */
+    public function buildMenu(string $name, Menu $parentMenu, array $options = []): Menu
+    {
+        $options = $this->updateVisible($options);
+
+        $menu = Menu::create($name, $parentMenu, $options);
+        $this->updateActive($menu);
+        $parentMenu->addMenu($menu);
+
+        $this->allMenus[] = $menu;
+
+        return $menu;
+    }
+
+    /**
      * @throws NameForMenuAlreadyExistsException
      */
     public function addMenu(string $name, array $options = []): self
     {
-        $options = $this->updateVisible($options);
-
-        $menu = Menu::create($name, $this->currentMenu, $options);
-        $this->updateActive($menu);
-        $this->currentMenu->addMenu($menu);
+        $this->buildMenu($name, $this->currentMenu, $options);
 
         return $this;
     }
@@ -60,18 +71,22 @@ class MenuHelper
      */
     public function addSubMenu(string $name, array $options = []): self
     {
-        $options = $this->updateVisible($options);
+        $subMenu = $this->buildMenu($name, $this->currentMenu, $options);
 
-        $subMenu = Menu::create($name, $this->currentMenu, $options);
-        $this->updateActive($subMenu);
-
-        $this->currentMenu->addMenu($subMenu);
         $this->currentMenu = $subMenu;
 
         return $this;
     }
 
-    private function updateActive(Menu $menu): void
+    /**
+     * @throws NameForMenuAlreadyExistsException
+     */
+    public function nestMenu(Menu $menu, Menu $into): void
+    {
+        $into->addMenu($menu);
+    }
+
+    protected function updateActive(Menu $menu): void
     {
         if (!$this->request) {
             return;
@@ -91,6 +106,39 @@ class MenuHelper
         return $this;
     }
 
+    public function getRootMenu(): Menu
+    {
+        return $this->rootMenu;
+    }
+
+    /**
+     * @throws MenuNotManagedByHelperException
+     */
+    public function loadMenu(Menu $menu): self
+    {
+        if (!in_array($menu, $this->allMenus, true)) {
+            throw new MenuNotManagedByHelperException();
+        }
+
+        $this->currentMenu = $menu;
+
+        return $this;
+    }
+
+    public function loadParentMenu(): self
+    {
+        $this->currentMenu = $this->currentMenu->getParent();
+
+        return $this;
+    }
+
+    public function loadMenuByName(string $name): self
+    {
+        $this->currentMenu = $this->currentMenu->getMenuByName($name);
+
+        return $this;
+    }
+
     public function getMenuByName(string $name): ?Menu
     {
         return $this->rootMenu->getMenuByName($name);
@@ -99,6 +147,11 @@ class MenuHelper
     public function getMenu(): Menu
     {
         return $this->rootMenu;
+    }
+
+    public function getCurrentMenu(): Menu
+    {
+        return $this->currentMenu;
     }
 
     /**

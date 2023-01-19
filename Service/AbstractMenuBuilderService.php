@@ -8,8 +8,8 @@ use Unlooped\MenuBundle\Helper\MenuHelper;
 abstract class AbstractMenuBuilderService
 {
 
-    protected $requestStack;
-    private $menuService;
+    protected ?RequestStack $requestStack;
+    private ?MenuService $menuService;
 
     public function __construct(RequestStack $requestStack = null)
     {

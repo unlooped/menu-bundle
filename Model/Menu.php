@@ -2,19 +2,20 @@
 
 namespace Unlooped\MenuBundle\Model;
 
-use Unlooped\MenuBundle\Exception\NameForMenuAlreadyExistsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Unlooped\MenuBundle\Exception\NameForMenuAlreadyExistsException;
 
 class Menu
 {
 
-    private $name;
-    private $isActive = false;
-    private $isChildActive = false;
-    private $activeChild;
-    private $children = [];
-    private $options;
-    private $parent;
+    private string $name;
+    private bool $isActive = false;
+    private bool $isChildActive = false;
+    private ?Menu $activeChild;
+    private array $children = [];
+    private array $options;
+    private ?Menu $parent;
+    private bool $isSorted = false;
 
     public function __construct(string $name, Menu $parent = null, array $options = [])
     {
@@ -48,6 +49,7 @@ class Menu
             'other'             => [],
             'visible'           => true,
             'visible_for_roles' => null,
+            'position'          => 100_000,
         ]);
 
         $resolver->setAllowedTypes('label', ['null', 'string']);
@@ -59,6 +61,7 @@ class Menu
         $resolver->setAllowedTypes('other', 'array');
         $resolver->setAllowedTypes('visible', 'bool');
         $resolver->setAllowedTypes('visible_for_roles', ['null', 'string', 'array']);
+        $resolver->setAllowedTypes('position', 'int');
     }
     /**
      * @throws NameForMenuAlreadyExistsException
@@ -70,6 +73,7 @@ class Menu
         }
 
         $this->children[$menu->getName()] = $menu;
+        $this->isSorted = false;
     }
 
     /**
@@ -119,14 +123,19 @@ class Menu
         return $this->options['label'] ?? $this->name;
     }
 
-    public function getOtherOptions()
+    public function getOtherOptions(): array
     {
         return $this->options['other'];
     }
 
-    public function getAttr()
+    public function getAttr(): array
     {
         return $this->options['attr'];
+    }
+
+    protected function getPosition(): int
+    {
+        return $this->options['position'];
     }
 
     public function markAsActive(): void
@@ -161,7 +170,26 @@ class Menu
      */
     public function getChildren(): array
     {
+        if ($this->isSorted) {
+            return $this->children;
+        }
+
+        $this->sortChildren();
         return $this->children;
+    }
+
+    protected function sortChildren(): void
+    {
+        usort($this->children, static function (Menu $a, Menu $b) {
+            $pa = $a->getPosition();
+            $pb = $b->getPosition();
+            if ($pa === $pb) {
+                return 0;
+            }
+            return ($pa < $pb) ? -1 : 1;
+        });
+
+        $this->isSorted = true;
     }
 
     /**
@@ -169,7 +197,7 @@ class Menu
      */
     public function visibleChildren(): array
     {
-        return array_filter($this->children, function(Menu $menu) {
+        return array_filter($this->getChildren(), static function(Menu $menu) {
             return $menu->isVisible();
         });
     }

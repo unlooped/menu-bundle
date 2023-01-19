@@ -8,8 +8,8 @@ use Unlooped\MenuBundle\Helper\MenuHelper;
 class MenuService
 {
 
-    private $menuBuilderServices;
-    private $authorizationChecker;
+    private iterable $menuBuilderServices;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
     /**
      * @param iterable|AbstractMenuBuilderService[] $handlers
